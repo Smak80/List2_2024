@@ -83,7 +83,34 @@ bool get(list2<T> list, int index, T& value)
 }
 
 template <typename T>
-bool removeAt(list2<T> list, int index)
+bool removeAt(list2<T>& list, int index)
 {
-
+	if (!list.count || index < 0 || index >= list.count) return false;
+	if (index == 0)
+	{
+		auto del = list.first;
+		list.first = list.first->next;
+		delete del;
+		if (!list.first) list.last = nullptr;
+		else list.first->prev = nullptr;
+	} else if (index == list.count - 1)
+	{
+		auto del = list.last;
+		list.last = list.last->prev;
+		delete del;
+		list.last->next = nullptr;
+	} else
+	{
+		auto curr = list.first->next;
+		int cnt = 0;
+		while (++cnt < index)
+		{
+			curr = curr->next;
+		}
+		curr->prev->next = curr->next;
+		curr->next->prev = curr->prev;
+		delete curr;
+	}
+	--list.count;
+	return true;
 }
